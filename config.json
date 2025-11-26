@@ -113,9 +113,9 @@
       "jumpTo": 1
     },
     {
-      "name": "小黄鸭",
-      "url": "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF-Binary/Duck.glb",
-      "description": "经典小黄鸭",
+      "name": "hello",
+      "url": "model/kid-hello.glb",
+      "description": "hello",
       "jumpTo": 2
     },
     {
