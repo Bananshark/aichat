@@ -7,7 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
-    <script src="./config.js"></script>
     <style>
         * {
             margin: 0;
@@ -199,15 +198,6 @@
             position: absolute;
             top: 20px;
             left: 0;
-                /* Hide developer controls for mobile/public builds */
-                .config-button,
-                .floating-controls,
-                .shortcut-hint,
-                #resetCamera,
-                #toggleAnimation,
-                #quickJump {
-                    display: none !important;
-                }
             width: 100%;
             text-align: center;
             z-index: 10;
@@ -226,159 +216,6 @@
         .header p {
             font-size: 1.1rem;
             opacity: 0.8;
-        }
-
-        /* 左上角配置按钮 */
-        .config-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            border: none;
-            outline: none;
-        }
-
-        .config-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(110, 142, 251, 0.4);
-        }
-
-        .config-button:active {
-            transform: translateY(0);
-        }
-
-        .config-button svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-            transition: all 0.3s ease;
-        }
-
-        .config-button:hover svg {
-            transform: rotate(45deg);
-        }
-
-        /* 返回按钮样式 */
-        .config-button.return-mode {
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
-        }
-
-        .config-button.return-mode:hover svg {
-            transform: rotate(-45deg);
-        }
-
-        /* 配置面板 - 在聊天界面上层 */
-        .config-panel {
-            position: absolute;
-            top: 80px;
-            left: 20px;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 99;
-            width: 450px;
-            display: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-height: 70vh;
-            overflow-y: auto;
-            animation: slideInDown 0.3s ease;
-        }
-
-        @keyframes slideInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .config-panel h3 {
-            margin-bottom: 15px;
-            color: #6e8efb;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-        }
-
-        .config-section {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .config-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .config-section h4 {
-            margin-bottom: 10px;
-            color: #a777e3;
-            font-size: 16px;
-        }
-
-        .config-group {
-            margin-bottom: 10px;
-        }
-
-        .config-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .config-group input, .config-group select {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 5px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            outline: none;
-        }
-
-        .config-group select option {
-            background: #1e293b;
-            color: white;
-        }
-
-        .config-group button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .config-group button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .position-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .position-controls input {
-            flex: 1;
-        }
-
-        #modelFileInput {
-            display: none;
         }
 
         .loading-overlay {
@@ -407,70 +244,6 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        .shortcut-hint {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 8px 12px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            z-index: 10;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* 滚动条样式 */
-        .messages-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .messages-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-
-        .messages-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-        }
-
-        .messages-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .floating-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .floating-controls button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .floating-controls button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
         /* 过渡效果遮罩 */
@@ -522,24 +295,23 @@
             border-color: #6e8efb;
         }
 
-        .model-config-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 5px;
-            margin-bottom: 8px;
+        /* 滚动条样式 */
+        .messages-container::-webkit-scrollbar {
+            width: 6px;
         }
 
-        .model-config-name {
-            flex: 1;
-            font-weight: bold;
+        .messages-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
         }
 
-        .model-config-select {
-            width: 150px;
-            margin-left: 10px;
+        .messages-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
 
         @media (max-width: 768px) {
@@ -556,54 +328,13 @@
                 font-size: 0.9rem;
             }
             
-            .floating-controls {
-                top: 10px;
-                right: 10px;
-                padding: 10px;
-            }
-            
-            .config-panel {
-                top: 70px;
-                left: 10px;
-                width: calc(100% - 20px);
-                max-height: 60vh;
-            }
-            
-            .config-button {
-                top: 10px;
-                left: 10px;
-                width: 45px;
-                height: 45px;
-            }
-            
             .model-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .model-config-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .model-config-select {
-                width: 100%;
-                margin-left: 0;
-                margin-top: 5px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 左上角配置按钮 -->
-    <button class="config-button" id="configButton" title="打开配置面板">
-        <svg viewBox="0 0 24 24" id="settingsIcon">
-            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-        </svg>
-        <svg viewBox="0 0 24 24" id="returnIcon" style="display: none;">
-            <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
-        </svg>
-    </button>
-
     <div class="header">
         <h1>3D卡通人智能助手</h1>
         <p>与可爱的3D卡通角色进行智能对话</p>
@@ -625,186 +356,10 @@
         <p style="margin-top: 20px;">正在加载模型，请稍候...</p>
     </div>
 
-    <!-- 配置面板 - 现在在左上角 -->
-    <div class="config-panel" id="configPanel">
-        <h3>配置面板</h3>
-        
-        <div class="config-section">
-            <h4>API配置</h4>
-            <div class="config-group">
-                <label for="apiUrl">API地址:</label>
-                <input type="text" id="apiUrl" placeholder="https://dashscope.aliyuncs.com/api/v1/apps/...">
-            </div>
-            <div class="config-group">
-                <label for="apiKey">API密钥:</label>
-                <input type="password" id="apiKey" placeholder="sk-xxxxxxxxx">
-            </div>
-            <div class="config-group">
-                <label for="appId">应用ID:</label>
-                <input type="text" id="appId" placeholder="dxxxxxxxxxx">
-            </div>
-            <div class="config-group">
-                <button id="saveConfig">保存配置</button>
-            </div>
-        </div>
-        
-        <div class="config-section">
-            <h4>模型配置</h4>
-            <div class="config-group">
-                <button id="loadDefaultModel">恢复默认模型</button>
-            </div>
-            <div class="config-group">
-                <button id="loadLocalModel">加载本地模型</button>
-                <input type="file" id="modelFileInput" accept=".glb,.gltf">
-            </div>
-            <div style="margin-top: 10px; font-size: 12px; color: #ccc;">
-                <p>提示：如果本地模型无法加载，请尝试：</p>
-                <p>1. 使用在线服务器运行此页面</p>
-                <p>2. 确保GLB文件格式正确</p>
-                <p>3. 模型文件不要过大（建议小于10MB）</p>
-            </div>
-        </div>
-
-        <!-- 新增：模型跳转配置 -->
-        <div class="config-section">
-            <h4>模型跳转配置</h4>
-            <div class="config-group">
-                <label for="clickJumpEnabled">启用点击跳转:</label>
-                <input type="checkbox" id="clickJumpEnabled" checked>
-            </div>
-            <div class="config-group">
-                <button id="showModelSelector">显示模型选择器</button>
-            </div>
-            <div class="config-group">
-                <button id="saveJumpConfig">保存跳转配置</button>
-            </div>
-        </div>
-
-        <!-- 新增：模型跳转目标配置 -->
-        <div class="config-section">
-            <h4>模型跳转目标</h4>
-            <div class="config-group">
-                <label>为每个模型设置点击后跳转的目标:</label>
-            </div>
-            <div id="modelJumpConfigs">
-                <!-- 模型跳转配置将通过JavaScript动态生成 -->
-            </div>
-            <div class="config-group">
-                <button id="saveModelJumpConfig">保存跳转目标</button>
-            </div>
-        </div>
-
-        <div class="config-section">
-            <h4>模型位置</h4>
-            <div class="config-group">
-                <label>X轴位置:</label>
-                <div class="position-controls">
-                    <input type="range" id="modelX" min="-5" max="5" step="0.1" value="0">
-                    <input type="number" id="modelXValue" min="-5" max="5" step="0.1" value="0" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <label>Y轴位置:</label>
-                <div class="position-controls">
-                    <input type="range" id="modelY" min="-5" max="5" step="0.1" value="0">
-                    <input type="number" id="modelYValue" min="-5" max="5" step="0.1" value="0" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <label>Z轴位置:</label>
-                <div class="position-controls">
-                    <input type="range" id="modelZ" min="-5" max="5" step="0.1" value="0">
-                    <input type="number" id="modelZValue" min="-5" max="5" step="0.1" value="0" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <button id="resetModelPosition">重置模型位置</button>
-            </div>
-        </div>
-
-        <div class="config-section">
-            <h4>模型旋转</h4>
-            <div class="config-group">
-                <label>X轴旋转:</label>
-                <div class="position-controls">
-                    <input type="range" id="modelRotationX" min="-180" max="180" step="1" value="0">
-                    <input type="number" id="modelRotationXValue" min="-180" max="180" step="1" value="0" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <label>Y轴旋转:</label>
-                <div class="position-controls">
-                    <input type="range" id="modelRotationY" min="-180" max="180" step="1" value="0">
-                    <input type="number" id="modelRotationYValue" min="-180" max="180" step="1" value="0" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <label>Z轴旋转:</label>
-                <div class="position-controls">
-                    <input type="range" id="modelRotationZ" min="-180" max="180" step="1" value="0">
-                    <input type="number" id="modelRotationZValue" min="-180" max="180" step="1" value="0" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <button id="resetModelRotation">重置模型旋转</button>
-            </div>
-        </div>
-
-        <div class="config-section">
-            <h4>灯光位置</h4>
-            <div class="config-group">
-                <label>X轴位置:</label>
-                <div class="position-controls">
-                    <input type="range" id="lightX" min="-10" max="10" step="0.1" value="5">
-                    <input type="number" id="lightXValue" min="-10" max="10" step="0.1" value="5" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <label>Y轴位置:</label>
-                <div class="position-controls">
-                    <input type="range" id="lightY" min="-10" max="10" step="0.1" value="10">
-                    <input type="number" id="lightYValue" min="-10" max="10" step="0.1" value="10" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <label>Z轴位置:</label>
-                <div class="position-controls">
-                    <input type="range" id="lightZ" min="-10" max="10" step="0.1" value="7">
-                    <input type="number" id="lightZValue" min="-10" max="10" step="0.1" value="7" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <button id="resetLightPosition">重置灯光位置</button>
-            </div>
-        </div>
-        
-        <div class="config-section">
-            <h4>文字显示效果</h4>
-            <div class="config-group">
-                <label for="textSpeed">文字显示速度 (毫秒/字):</label>
-                <div class="position-controls">
-                    <input type="range" id="textSpeed" min="10" max="200" step="5" value="50">
-                    <input type="number" id="textSpeedValue" min="10" max="200" step="5" value="50" style="width: 70px;">
-                </div>
-            </div>
-            <div class="config-group">
-                <button id="resetTextSpeed">重置文字速度</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="floating-controls">
-        <button id="resetCamera">重置视角</button>
-        <button id="toggleAnimation">暂停动画</button>
-        <button id="quickJump">快速跳转</button>
-    </div>
-
-    <div class="shortcut-hint">按 Alt+9 显示/隐藏配置面板</div>
-
     <div class="chat-container">
         <div class="messages-container" id="messagesContainer">
             <div class="message bot-message">
-                你好！我是你的3D卡通助手，请按Alt+9打开配置面板，配置API信息后开始对话。
+                你好！我是你的3D卡通助手，点击角色可以切换不同的3D模型。
             </div>
         </div>
         <div class="typing-indicator" id="typingIndicator">
@@ -819,16 +374,17 @@
             <input type="text" id="userInput" placeholder="输入您的问题..." autocomplete="off">
             <button id="sendButton">发送</button>
         </div>
-        <div class="status" id="status">请配置API信息</div>
+        <div class="status" id="status">准备就绪</div>
     </div>
 
     <script>
-        // ========== 配置加载系统 ==========
-        let appConfig = null; // 全局配置对象
-        
-        // 默认配置（如果配置文件加载失败时使用）
+        // 默认配置
         const defaultConfig = {
-            api: { url: "", key: "", appId: "" },
+            api: { 
+                url: "", 
+                key: "", 
+                appId: "" 
+            },
             model: {
                 defaultModelUrl: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Fox/glTF-Binary/Fox.glb",
                 defaultPosition: { x: 0, y: 0, z: 0 },
@@ -875,91 +431,18 @@
             modelLibrary: [
                 { name: "狐狸", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Fox/glTF-Binary/Fox.glb", description: "可爱的狐狸角色", jumpTo: 1 },
                 { name: "机器人", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb", description: "富有表现力的机器人", jumpTo: 2 },
-                { name: "太空人", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Astronaut/glTF-Binary/Astronaut.glb", description: "太空探索者", jumpTo: 3 },
-                { name: "小黄鸭", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF-Binary/Duck.glb", description: "经典小黄鸭", jumpTo: 0 }
+                { name: "太空人", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Astronaut/glTF-Binary/Astronaut.glb", description: "太空探索者", jumpTo: 0 }
             ],
             ui: {
                 title: "3D卡通人智能助手",
                 subtitle: "与可爱的3D卡通角色进行智能对话",
-                welcomeMessage: "你好！我是你的3D卡通助手，请按Alt+9打开配置面板，配置API信息后开始对话。",
+                welcomeMessage: "你好！我是你的3D卡通助手，点击角色可以切换不同的3D模型。",
                 inputPlaceholder: "输入您的问题...",
-                statusText: "请配置API信息"
+                statusText: "准备就绪"
             },
             animation: { defaultEnabled: true },
             file: { maxFileSize: 52428800, allowedExtensions: [".glb", ".gltf"] }
         };
-        
-        // 加载配置文件
-        async function loadConfig() {
-            try {
-                const response = await fetch('config.json');
-                if (!response.ok) {
-                    throw new Error('配置文件加载失败，使用默认配置');
-                }
-                const config = await response.json();
-                // 深度合并配置，确保所有字段都存在
-                appConfig = deepMerge(defaultConfig, config);
-                // 规范化一些可能以数组或其它结构出现的字段，便于后续代码使用
-                normalizeConfigShapes(appConfig);
-                console.log('配置文件加载成功', appConfig);
-            } catch (error) {
-                console.warn('使用默认配置:', error.message);
-                appConfig = defaultConfig;
-            }
-        }
-
-        // 规范化配置结构：支持数组或对象形式的 position/rotation，并清理 modelLibrary 的 onClick 字段
-        function normalizeConfigShapes(cfg) {
-            if (!cfg || !cfg.model) return;
-
-            const m = cfg.model;
-
-            // defaultPosition: allow [x,y,z] or {x,y,z}
-            if (Array.isArray(m.defaultPosition)) {
-                m.defaultPosition = { x: m.defaultPosition[0] || 0, y: m.defaultPosition[1] || 0, z: m.defaultPosition[2] || 0 };
-            }
-            // defaultRotation: allow [x,y,z] or {x,y,z}
-            if (Array.isArray(m.defaultRotation)) {
-                m.defaultRotation = { x: m.defaultRotation[0] || 0, y: m.defaultRotation[1] || 0, z: m.defaultRotation[2] || 0 };
-            }
-
-            // modelLibrary entries: normalize onClick -> jumpTo (number or name) and trim names
-            if (Array.isArray(cfg.modelLibrary)) {
-                cfg.modelLibrary.forEach((entry) => {
-                    if (entry.name) entry.name = String(entry.name).trim();
-
-                    if (entry.onClick !== undefined && (entry.jumpTo === undefined || entry.jumpTo === null)) {
-                        if (typeof entry.onClick === 'number') {
-                            entry.jumpTo = entry.onClick;
-                        } else if (typeof entry.onClick === 'string') {
-                            // leave string for later resolution when full library is available
-                            entry._onClickName = entry.onClick.trim();
-                        }
-                    }
-                });
-                // resolve any _onClickName to indices
-                cfg.modelLibrary.forEach((entry) => {
-                    if (entry._onClickName) {
-                        const idx = cfg.modelLibrary.findIndex(e => e.name === entry._onClickName);
-                        if (idx !== -1) entry.jumpTo = idx;
-                        delete entry._onClickName;
-                    }
-                });
-            }
-        }
-        
-        // 深度合并对象
-        function deepMerge(target, source) {
-            const result = { ...target };
-            for (const key in source) {
-                if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-                    result[key] = deepMerge(target[key] || {}, source[key]);
-                } else {
-                    result[key] = source[key];
-                }
-            }
-            return result;
-        }
         
         // 初始化3D场景
         let scene, camera, renderer, controls;
@@ -969,29 +452,29 @@
         let isAnimating = true;
         let directionalLight = null;
         
-        // API配置（将从配置文件加载）
+        // API配置
         let apiConfig = {
             url: "",
             key: "",
             appId: ""
         };
         
-        // 文字显示速度（将从配置文件加载）
+        // 文字显示速度
         let textDisplaySpeed = 50; // 毫秒/字
         
-        // 默认模型URL（将从配置文件加载）
+        // 默认模型URL
         let DEFAULT_MODEL_URL = "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Fox/glTF-Binary/Fox.glb";
         
         // 控制输入状态
         let isWaitingForResponse = false;
         
-        // 模型跳转配置（将从配置文件加载）
+        // 模型跳转配置
         let modelJumpConfig = {
             clickJumpEnabled: true,
             currentModelIndex: 0
         };
         
-        // 预设模型库（将从配置文件加载）
+        // 预设模型库
         let MODEL_LIBRARY = [];
 
         // 本地模型存储
@@ -999,7 +482,7 @@
 
         function init3DScene() {
             // 获取配置
-            const cfg = appConfig || defaultConfig;
+            const cfg = defaultConfig;
             const sceneCfg = cfg.scene;
             const cameraCfg = cfg.camera;
             const lightCfg = cfg.light;
@@ -1009,7 +492,7 @@
             scene = new THREE.Scene();
             scene.background = new THREE.Color(sceneCfg.backgroundColor);
             
-            // 创建相机 - 使用配置中的参数
+            // 创建相机
             camera = new THREE.PerspectiveCamera(
                 cameraCfg.fov, 
                 window.innerWidth / window.innerHeight, 
@@ -1018,7 +501,7 @@
             );
             camera.position.set(cameraCfg.position.x, cameraCfg.position.y, cameraCfg.position.z);
             
-            // 创建渲染器 - 使用配置中的参数
+            // 创建渲染器
             const canvas = document.getElementById('characterCanvas');
             const rendererCfg = sceneCfg.renderer;
             renderer = new THREE.WebGLRenderer({ 
@@ -1036,7 +519,7 @@
             renderer.shadowMap.enabled = sceneCfg.shadowMap.enabled;
             renderer.shadowMap.type = THREE[sceneCfg.shadowMap.type];
             
-            // 添加光源 - 使用配置中的参数
+            // 添加光源
             const ambientLight = new THREE.AmbientLight(
                 lightCfg.ambient.color, 
                 lightCfg.ambient.intensity
@@ -1057,7 +540,7 @@
             directionalLight.shadow.mapSize.height = lightCfg.directional.shadowMapSize.height;
             scene.add(directionalLight);
             
-            // 添加轨道控制 - 使用配置中的参数
+            // 添加轨道控制
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = controlsCfg.enableDamping;
             controls.dampingFactor = controlsCfg.dampingFactor;
@@ -1065,7 +548,7 @@
             controls.maxDistance = controlsCfg.maxDistance;
             controls.target.set(controlsCfg.target.x, controlsCfg.target.y, controlsCfg.target.z);
             
-            // 加载默认模型 - 使用配置中的URL
+            // 加载默认模型
             loadModel(DEFAULT_MODEL_URL);
             
             // 窗口大小调整
@@ -1085,11 +568,6 @@
             const mouse = new THREE.Vector2();
             
             canvas.addEventListener('click', (event) => {
-                // 如果配置面板打开，不处理点击
-                if (document.getElementById('configPanel').style.display === 'block') {
-                    return;
-                }
-                
                 // 计算鼠标在归一化设备坐标中的位置
                 const rect = canvas.getBoundingClientRect();
                 mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -1289,87 +767,6 @@
             animateTransition();
         }
         
-        // 初始化模型跳转配置界面
-        function initModelJumpConfigs() {
-            const modelJumpConfigs = document.getElementById('modelJumpConfigs');
-            modelJumpConfigs.innerHTML = '';
-            
-            // 添加预设模型的配置
-            MODEL_LIBRARY.forEach((model, index) => {
-                const configItem = createModelConfigItem(model, index, false);
-                modelJumpConfigs.appendChild(configItem);
-            });
-            
-            // 添加本地模型的配置
-            LOCAL_MODELS.forEach((model, index) => {
-                const globalIndex = MODEL_LIBRARY.length + index;
-                const configItem = createModelConfigItem(model, globalIndex, true);
-                modelJumpConfigs.appendChild(configItem);
-            });
-        }
-
-        // 创建模型配置项的函数
-        function createModelConfigItem(model, index, isLocal) {
-            const configItem = document.createElement('div');
-            configItem.className = 'model-config-item';
-            
-            const modelType = isLocal ? '（本地）' : '';
-            
-            configItem.innerHTML = `
-                <div class="model-config-name">${model.name}${modelType}</div>
-                <select class="model-config-select" data-model-index="${index}" data-is-local="${isLocal}">
-                    ${MODEL_LIBRARY.map((targetModel, targetIndex) => `
-                        <option value="${targetIndex}" ${model.jumpTo === targetIndex ? 'selected' : ''}>
-                            ${targetModel.name}
-                        </option>
-                    `).join('')}
-                    ${LOCAL_MODELS.map((targetModel, targetIndex) => `
-                        <option value="${MODEL_LIBRARY.length + targetIndex}" ${model.jumpTo === MODEL_LIBRARY.length + targetIndex ? 'selected' : ''}>
-                            ${targetModel.name}（本地）
-                        </option>
-                    `).join('')}
-                    <option value="-1" ${model.jumpTo === -1 ? 'selected' : ''}>无跳转</option>
-                </select>
-            `;
-            
-            return configItem;
-        }
-        
-        // 保存模型跳转配置
-        function saveModelJumpConfig() {
-            const selectElements = document.querySelectorAll('.model-config-select');
-            
-            selectElements.forEach(select => {
-                const modelIndex = parseInt(select.getAttribute('data-model-index'));
-                const isLocal = select.getAttribute('data-is-local') === 'true';
-                const jumpToIndex = parseInt(select.value);
-                
-                if (isLocal) {
-                    // 本地模型
-                    const localIndex = modelIndex - MODEL_LIBRARY.length;
-                    if (localIndex >= 0 && localIndex < LOCAL_MODELS.length) {
-                        LOCAL_MODELS[localIndex].jumpTo = jumpToIndex;
-                    }
-                } else {
-                    // 预设模型
-                    if (modelIndex >= 0 && modelIndex < MODEL_LIBRARY.length) {
-                        MODEL_LIBRARY[modelIndex].jumpTo = jumpToIndex;
-                    }
-                }
-            });
-            
-            // 保存到本地存储
-            localStorage.setItem('modelLibraryConfig', JSON.stringify(MODEL_LIBRARY));
-            localStorage.setItem('localModelsConfig', JSON.stringify(LOCAL_MODELS));
-            
-            // 显示成功消息
-            addMessage('模型跳转配置已保存！', 'bot');
-            document.getElementById('status').textContent = '跳转配置已保存';
-            
-            // 更新当前模型的跳转信息显示
-            updateCurrentModelInfo();
-        }
-        
         // 更新当前模型信息显示
         function updateCurrentModelInfo() {
             const currentModelData = getCurrentModelData();
@@ -1403,7 +800,7 @@
         
         // 统一模型缩放函数
         function autoScaleModel(model) {
-            const cfg = appConfig || defaultConfig;
+            const cfg = defaultConfig;
             const modelCfg = cfg.model;
             
             if (!modelCfg.autoScale) {
@@ -1469,7 +866,7 @@
 
         // 提取模型加载后的设置逻辑
         function setupModelAfterLoad(gltf, modelName, isLocalModel) {
-            const cfg = appConfig || defaultConfig;
+            const cfg = defaultConfig;
             const modelCfg = cfg.model;
             
             // 移除现有模型
@@ -1500,14 +897,10 @@
             const rotY = modelCfg.defaultRotation.y * Math.PI / 180;
             const rotZ = modelCfg.defaultRotation.z * Math.PI / 180;
             
-            // 如果是本地模型，使用配置中的本地模型旋转角度（改为Z轴）
+            // 如果是本地模型，使用配置中的本地模型旋转角度
             if (isLocalModel) {
                 const localRotZ = modelCfg.localModelRotationZ * Math.PI / 180;
                 currentModel.rotation.set(rotX, rotY, localRotZ);
-
-                // 同时更新旋转控制器的值（Z轴）
-                document.getElementById('modelRotationZ').value = modelCfg.localModelRotationZ;
-                document.getElementById('modelRotationZValue').value = modelCfg.localModelRotationZ;
             } else {
                 currentModel.rotation.set(rotX, rotY, rotZ);
             }
@@ -1545,213 +938,6 @@
             addMessage(`已切换到 ${modelName}，现在可以开始对话了！`, 'bot');
         }
         
-        function loadLocalModel(file) {
-            showLoadingOverlay();
-            
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                const arrayBuffer = e.target.result;
-                
-                // 显示加载状态
-                document.getElementById('status').textContent = '正在解析本地模型...';
-                
-                const loader = new THREE.GLTFLoader();
-                
-                loader.parse(arrayBuffer, '', function(gltf) {
-                    // 移除现有模型
-                    if (currentModel) {
-                        scene.remove(currentModel);
-                        if (mixer) {
-                            mixer.stopAllAction();
-                            mixer = null;
-                        }
-                    }
-                    
-                    // 添加新模型
-                    currentModel = gltf.scene;
-                    scene.add(currentModel);
-                    
-                    // 设置模型位置和缩放
-                    currentModel.position.set(0, 0, 0);
-                    
-                    // 新增：设置用户导入的模型默认Z轴旋转-90度
-                    currentModel.rotation.z = -Math.PI / 2; // -90度
-                    
-                    // 使用统一的自动缩放
-                    autoScaleModel(currentModel);
-                    
-                    // 启用阴影
-                    currentModel.traverse(function(node) {
-                        if (node.isMesh) {
-                            node.castShadow = true;
-                            node.receiveShadow = true;
-                            
-                            // 确保材质正确渲染
-                            if (node.material) {
-                                node.material.needsUpdate = true;
-                                node.material.transparent = false;
-                                node.material.opacity = 1;
-                            }
-                        }
-                    });
-                    
-                    // 设置动画
-                    if (gltf.animations && gltf.animations.length) {
-                        mixer = new THREE.AnimationMixer(currentModel);
-                        const action = mixer.clipAction(gltf.animations[0]);
-                        action.play();
-                    }
-                    
-                    // 重置相机位置
-                    controls.reset();
-                    
-                    // 创建本地模型信息并添加到本地模型库
-                    const localModelInfo = {
-                        name: file.name.replace(/\.[^/.]+$/, ""), // 移除文件扩展名
-                        url: `local://${file.name}`,
-                        description: `本地模型: ${file.name}`,
-                        jumpTo: 0, // 默认跳转到第一个模型
-                        isLocal: true,
-                        fileData: arrayBuffer // 保存文件数据以便重新加载
-                    };
-                    
-                    // 检查是否已存在同名本地模型
-                    const existingIndex = LOCAL_MODELS.findIndex(m => m.name === localModelInfo.name);
-                    if (existingIndex !== -1) {
-                        LOCAL_MODELS[existingIndex] = localModelInfo;
-                    } else {
-                        LOCAL_MODELS.push(localModelInfo);
-                    }
-                    
-                    // 更新当前模型索引为本地模型
-                    modelJumpConfig.currentModelIndex = MODEL_LIBRARY.length + LOCAL_MODELS.length - 1;
-                    
-                    // 更新模型跳转配置界面
-                    initModelJumpConfigs();
-                    
-                    // 更新状态
-                    document.getElementById('status').textContent = '本地模型加载成功！';
-                    hideLoadingOverlay();
-                    
-                    // 更新当前模型信息显示
-                    updateCurrentModelInfo();
-                    
-                    // 同时更新旋转控制器的值（Z轴）
-                    document.getElementById('modelRotationZ').value = -90;
-                    document.getElementById('modelRotationZValue').value = -90;
-                    
-                    // 显示成功消息
-                    addMessage(`本地模型 "${localModelInfo.name}" 加载成功！已设置为Y轴旋转-90度。`, 'bot');
-                }, function(error) {
-                    console.error('模型解析错误:', error);
-                    document.getElementById('status').textContent = '模型解析失败: ' + error.message;
-                    hideLoadingOverlay();
-                    
-                    // 显示错误消息
-                    addMessage('模型解析失败，请检查文件格式是否正确。', 'bot');
-                });
-            };
-            
-            reader.onerror = function(error) {
-                console.error('文件读取错误:', error);
-                document.getElementById('status').textContent = '文件读取失败';
-                hideLoadingOverlay();
-                
-                // 显示错误消息
-                addMessage('文件读取失败，请重试或选择其他文件。', 'bot');
-            };
-            
-            reader.readAsArrayBuffer(file);
-        }
-        
-        function updateModelPosition() {
-            if (currentModel) {
-                const x = parseFloat(document.getElementById('modelX').value);
-                const y = parseFloat(document.getElementById('modelY').value);
-                const z = parseFloat(document.getElementById('modelZ').value);
-                
-                currentModel.position.set(x, y, z);
-            }
-        }
-        
-        function updateModelRotation() {
-            if (currentModel) {
-                const x = parseFloat(document.getElementById('modelRotationX').value) * Math.PI / 180;
-                const y = parseFloat(document.getElementById('modelRotationY').value) * Math.PI / 180;
-                const z = parseFloat(document.getElementById('modelRotationZ').value) * Math.PI / 180;
-                
-                currentModel.rotation.set(x, y, z);
-            }
-        }
-        
-        function updateLightPosition() {
-            if (directionalLight) {
-                const x = parseFloat(document.getElementById('lightX').value);
-                const y = parseFloat(document.getElementById('lightY').value);
-                const z = parseFloat(document.getElementById('lightZ').value);
-                
-                directionalLight.position.set(x, y, z);
-            }
-        }
-        
-        function resetModelPosition() {
-            const cfg = appConfig || defaultConfig;
-            const pos = cfg.model.defaultPosition;
-            
-            document.getElementById('modelX').value = pos.x;
-            document.getElementById('modelY').value = pos.y;
-            document.getElementById('modelZ').value = pos.z;
-            document.getElementById('modelXValue').value = pos.x;
-            document.getElementById('modelYValue').value = pos.y;
-            document.getElementById('modelZValue').value = pos.z;
-            
-            updateModelPosition();
-        }
-        
-        function resetModelRotation() {
-            const cfg = appConfig || defaultConfig;
-            const rot = cfg.model.defaultRotation;
-            
-            document.getElementById('modelRotationX').value = rot.x;
-            document.getElementById('modelRotationY').value = rot.y;
-            document.getElementById('modelRotationZ').value = rot.z;
-            document.getElementById('modelRotationXValue').value = rot.x;
-            document.getElementById('modelRotationYValue').value = rot.y;
-            document.getElementById('modelRotationZValue').value = rot.z;
-            
-            updateModelRotation();
-        }
-        
-        function resetLightPosition() {
-            const cfg = appConfig || defaultConfig;
-            const lightPos = cfg.light.directional.position;
-            
-            document.getElementById('lightX').value = lightPos.x;
-            document.getElementById('lightY').value = lightPos.y;
-            document.getElementById('lightZ').value = lightPos.z;
-            document.getElementById('lightXValue').value = lightPos.x;
-            document.getElementById('lightYValue').value = lightPos.y;
-            document.getElementById('lightZValue').value = lightPos.z;
-            
-            updateLightPosition();
-        }
-        
-        function updateTextSpeed() {
-            const speed = parseInt(document.getElementById('textSpeed').value);
-            document.getElementById('textSpeedValue').value = speed;
-            textDisplaySpeed = speed;
-        }
-        
-        function resetTextSpeed() {
-            const cfg = appConfig || defaultConfig;
-            const speed = cfg.textDisplay.speed;
-            
-            document.getElementById('textSpeed').value = speed;
-            document.getElementById('textSpeedValue').value = speed;
-            textDisplaySpeed = speed;
-        }
-        
         function onWindowResize() {
             const canvas = document.getElementById('characterCanvas');
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -1775,9 +961,7 @@
         
         // 应用配置到全局变量
         function applyConfig() {
-            if (!appConfig) return;
-            
-            const cfg = appConfig;
+            const cfg = defaultConfig;
             
             // 应用API配置
             apiConfig.url = cfg.api.url || "";
@@ -1794,114 +978,27 @@
             modelJumpConfig.clickJumpEnabled = cfg.modelJump.clickJumpEnabled !== undefined ? cfg.modelJump.clickJumpEnabled : true;
             modelJumpConfig.currentModelIndex = cfg.modelJump.currentModelIndex !== undefined ? cfg.modelJump.currentModelIndex : 0;
             
-            // 应用模型库（如果配置文件中存在）
+            // 应用模型库
             if (cfg.modelLibrary && cfg.modelLibrary.length > 0) {
                 MODEL_LIBRARY = cfg.modelLibrary;
-
-                // 兼容性：支持在配置中使用 model.onClick 字段（名字或索引）来设置点击跳转目标
-                MODEL_LIBRARY.forEach((m, idx) => {
-                    if (m.onClick !== undefined && (m.jumpTo === undefined || m.jumpTo === null)) {
-                        // 如果 onClick 是数字，直接使用；如果是字符串，按名字查找目标索引
-                        if (typeof m.onClick === 'number') {
-                            m.jumpTo = m.onClick;
-                        } else if (typeof m.onClick === 'string') {
-                            const targetName = m.onClick.trim();
-                            const targetIndex = MODEL_LIBRARY.findIndex(mm => mm.name === targetName);
-                            if (targetIndex !== -1) m.jumpTo = targetIndex;
-                        }
-                    }
-                });
             }
             
             // 应用动画配置
             isAnimating = cfg.animation.defaultEnabled !== undefined ? cfg.animation.defaultEnabled : true;
         }
         
-        // 应用配置到UI元素
-        function applyConfigToUI() {
-            if (!appConfig) return;
-            
-            const cfg = appConfig;
-            
-            // 更新UI文本
-            if (cfg.ui) {
-                const headerH1 = document.querySelector('.header h1');
-                const headerP = document.querySelector('.header p');
-                const welcomeMsg = document.querySelector('.messages-container .bot-message');
-                const inputPlaceholder = document.getElementById('userInput');
-                const statusText = document.getElementById('status');
-                
-                if (headerH1 && cfg.ui.title) headerH1.textContent = cfg.ui.title;
-                if (headerP && cfg.ui.subtitle) headerP.textContent = cfg.ui.subtitle;
-                if (welcomeMsg && cfg.ui.welcomeMessage) welcomeMsg.textContent = cfg.ui.welcomeMessage;
-                if (inputPlaceholder && cfg.ui.inputPlaceholder) inputPlaceholder.placeholder = cfg.ui.inputPlaceholder;
-                if (statusText && cfg.ui.statusText) statusText.textContent = cfg.ui.statusText;
-            }
-            
-            // 更新模型位置控制器的默认值
-            if (cfg.model && cfg.model.defaultPosition) {
-                document.getElementById('modelX').value = cfg.model.defaultPosition.x;
-                document.getElementById('modelY').value = cfg.model.defaultPosition.y;
-                document.getElementById('modelZ').value = cfg.model.defaultPosition.z;
-                document.getElementById('modelXValue').value = cfg.model.defaultPosition.x;
-                document.getElementById('modelYValue').value = cfg.model.defaultPosition.y;
-                document.getElementById('modelZValue').value = cfg.model.defaultPosition.z;
-            }
-            
-            // 更新模型旋转控制器的默认值
-            if (cfg.model && cfg.model.defaultRotation) {
-                document.getElementById('modelRotationX').value = cfg.model.defaultRotation.x;
-                document.getElementById('modelRotationY').value = cfg.model.defaultRotation.y;
-                document.getElementById('modelRotationZ').value = cfg.model.defaultRotation.z;
-                document.getElementById('modelRotationXValue').value = cfg.model.defaultRotation.x;
-                document.getElementById('modelRotationYValue').value = cfg.model.defaultRotation.y;
-                document.getElementById('modelRotationZValue').value = cfg.model.defaultRotation.z;
-            }
-            
-            // 更新灯光位置控制器的默认值
-            if (cfg.light && cfg.light.directional && cfg.light.directional.position) {
-                document.getElementById('lightX').value = cfg.light.directional.position.x;
-                document.getElementById('lightY').value = cfg.light.directional.position.y;
-                document.getElementById('lightZ').value = cfg.light.directional.position.z;
-                document.getElementById('lightXValue').value = cfg.light.directional.position.x;
-                document.getElementById('lightYValue').value = cfg.light.directional.position.y;
-                document.getElementById('lightZValue').value = cfg.light.directional.position.z;
-            }
-            
-            // 更新文字速度控制器的默认值
-            if (cfg.textDisplay && cfg.textDisplay.speed) {
-                document.getElementById('textSpeed').value = cfg.textDisplay.speed;
-                document.getElementById('textSpeedValue').value = cfg.textDisplay.speed;
-            }
-            
-            // 更新跳转配置复选框
-            if (cfg.modelJump) {
-                document.getElementById('clickJumpEnabled').checked = cfg.modelJump.clickJumpEnabled;
-            }
-        }
-        
         // 聊天功能
         document.addEventListener('DOMContentLoaded', async function() {
-            // 首先加载配置文件
-            await loadConfig();
-            
             // 应用配置到全局变量
             applyConfig();
             
-            // 初始化3D场景（现在会使用配置中的值）
+            // 初始化3D场景
             init3DScene();
             
-            // 应用配置到UI元素
-            applyConfigToUI();
-            
-            // 初始化模型跳转配置界面
-            initModelJumpConfigs();
-            
-            // 加载保存的模型配置（localStorage优先级高于配置文件）
+            // 加载保存的模型配置
             const savedModelConfig = localStorage.getItem('modelLibraryConfig');
             if (savedModelConfig) {
                 MODEL_LIBRARY = JSON.parse(savedModelConfig);
-                initModelJumpConfigs();
             }
             
             // 加载保存的本地模型配置
@@ -1909,8 +1006,6 @@
             if (savedLocalModels) {
                 try {
                     LOCAL_MODELS = JSON.parse(savedLocalModels);
-                    // 注意：文件数据无法通过JSON保存，所以需要重新上传文件
-                    // 这里我们只保存配置信息，文件数据需要用户重新上传
                     LOCAL_MODELS.forEach(model => {
                         model.fileData = null; // 清除文件数据，需要重新上传
                     });
@@ -1920,155 +1015,16 @@
                 }
             }
             
-            // 加载保存的跳转配置（localStorage优先级高于配置文件）
-            const savedJumpConfig = localStorage.getItem('modelJumpConfig');
-            if (savedJumpConfig) {
-                const savedConfig = JSON.parse(savedJumpConfig);
-                modelJumpConfig.clickJumpEnabled = savedConfig.clickJumpEnabled !== undefined ? savedConfig.clickJumpEnabled : modelJumpConfig.clickJumpEnabled;
-                document.getElementById('clickJumpEnabled').checked = modelJumpConfig.clickJumpEnabled;
-            }
-            
             const userInput = document.getElementById('userInput');
             const sendButton = document.getElementById('sendButton');
             const messagesContainer = document.getElementById('messagesContainer');
             const typingIndicator = document.getElementById('typingIndicator');
             const status = document.getElementById('status');
-            const resetCameraButton = document.getElementById('resetCamera');
-            const toggleAnimationButton = document.getElementById('toggleAnimation');
-            const saveConfigButton = document.getElementById('saveConfig');
-            const apiUrlInput = document.getElementById('apiUrl');
-            const apiKeyInput = document.getElementById('apiKey');
-            const appIdInput = document.getElementById('appId');
-            const loadDefaultModelButton = document.getElementById('loadDefaultModel');
-            const loadLocalModelButton = document.getElementById('loadLocalModel');
-            const modelFileInput = document.getElementById('modelFileInput');
-            const configPanel = document.getElementById('configPanel');
-            const configButton = document.getElementById('configButton');
-            
-            // 模型跳转配置元素
-            const clickJumpEnabledCheckbox = document.getElementById('clickJumpEnabled');
-            const showModelSelectorButton = document.getElementById('showModelSelector');
-            const saveJumpConfigButton = document.getElementById('saveJumpConfig');
-            const saveModelJumpConfigButton = document.getElementById('saveModelJumpConfig');
-            const quickJumpButton = document.getElementById('quickJump');
-            
-            // 模型位置控制元素
-            const modelXSlider = document.getElementById('modelX');
-            const modelYSlider = document.getElementById('modelY');
-            const modelZSlider = document.getElementById('modelZ');
-            const modelXValue = document.getElementById('modelXValue');
-            const modelYValue = document.getElementById('modelYValue');
-            const modelZValue = document.getElementById('modelZValue');
-            const resetModelPositionButton = document.getElementById('resetModelPosition');
-            
-            // 模型旋转控制元素
-            const modelRotationXSlider = document.getElementById('modelRotationX');
-            const modelRotationYSlider = document.getElementById('modelRotationY');
-            const modelRotationZSlider = document.getElementById('modelRotationZ');
-            const modelRotationXValue = document.getElementById('modelRotationXValue');
-            const modelRotationYValue = document.getElementById('modelRotationYValue');
-            const modelRotationZValue = document.getElementById('modelRotationZValue');
-            const resetModelRotationButton = document.getElementById('resetModelRotation');
-            
-            // 灯光位置控制元素
-            const lightXSlider = document.getElementById('lightX');
-            const lightYSlider = document.getElementById('lightY');
-            const lightZSlider = document.getElementById('lightZ');
-            const lightXValue = document.getElementById('lightXValue');
-            const lightYValue = document.getElementById('lightYValue');
-            const lightZValue = document.getElementById('lightZValue');
-            const resetLightPositionButton = document.getElementById('resetLightPosition');
-            
-            // 文字速度控制元素
-            const textSpeedSlider = document.getElementById('textSpeed');
-            const textSpeedValue = document.getElementById('textSpeedValue');
-            const resetTextSpeedButton = document.getElementById('resetTextSpeed');
-            
-            // 配置面板显示/隐藏
-            function toggleConfigPanel() {
-                const configPanel = document.getElementById('configPanel');
-                const configButton = document.getElementById('configButton');
-                const settingsIcon = document.getElementById('settingsIcon');
-                const returnIcon = document.getElementById('returnIcon');
-                
-                if (configPanel.style.display === 'block') {
-                    // 隐藏配置面板，恢复设置图标
-                    configPanel.style.display = 'none';
-                    configButton.classList.remove('return-mode');
-                    settingsIcon.style.display = 'block';
-                    returnIcon.style.display = 'none';
-                    configButton.title = '打开配置面板';
-                } else {
-                    // 显示配置面板，切换为返回图标
-                    configPanel.style.display = 'block';
-                    configButton.classList.add('return-mode');
-                    settingsIcon.style.display = 'none';
-                    returnIcon.style.display = 'block';
-                    configButton.title = '返回';
-                }
-            }
-            
-            // 左上角配置按钮点击事件
-            configButton.addEventListener('click', toggleConfigPanel);
-            
-            // 键盘快捷键监听（已禁用以适配移动/简洁模式）
-            // document.addEventListener('keydown', function(e) {
-            //     if (e.altKey && e.key === '9') {
-            //         toggleConfigPanel();
-            //         e.preventDefault();
-            //     }
-            // });
-            
-            // 模型位置滑块和输入框同步
-            function setupPositionControls(slider, valueInput, updateFunction) {
-                slider.addEventListener('input', function() {
-                    valueInput.value = this.value;
-                    updateFunction();
-                });
-                
-                valueInput.addEventListener('input', function() {
-                    slider.value = this.value;
-                    updateFunction();
-                });
-            }
-            
-            // 设置模型位置控制
-            setupPositionControls(modelXSlider, modelXValue, updateModelPosition);
-            setupPositionControls(modelYSlider, modelYValue, updateModelPosition);
-            setupPositionControls(modelZSlider, modelZValue, updateModelPosition);
-            
-            // 设置模型旋转控制
-            setupPositionControls(modelRotationXSlider, modelRotationXValue, updateModelRotation);
-            setupPositionControls(modelRotationYSlider, modelRotationYValue, updateModelRotation);
-            setupPositionControls(modelRotationZSlider, modelRotationZValue, updateModelRotation);
-            
-            // 设置灯光位置控制
-            setupPositionControls(lightXSlider, lightXValue, updateLightPosition);
-            setupPositionControls(lightYSlider, lightYValue, updateLightPosition);
-            setupPositionControls(lightZSlider, lightZValue, updateLightPosition);
-            
-            // 设置文字速度控制
-            setupPositionControls(textSpeedSlider, textSpeedValue, updateTextSpeed);
-            
-            // 重置模型位置
-            resetModelPositionButton.addEventListener('click', resetModelPosition);
-            
-            // 重置模型旋转
-            resetModelRotationButton.addEventListener('click', resetModelRotation);
-            
-            // 重置灯光位置
-            resetLightPositionButton.addEventListener('click', resetLightPosition);
-            
-            // 重置文字速度
-            resetTextSpeedButton.addEventListener('click', resetTextSpeed);
             
             // 加载保存的配置
             const savedConfig = localStorage.getItem('apiConfig');
             if (savedConfig) {
                 apiConfig = JSON.parse(savedConfig);
-                apiUrlInput.value = apiConfig.url;
-                apiKeyInput.value = apiConfig.key;
-                appIdInput.value = apiConfig.appId;
                 status.textContent = '已加载保存的配置';
             }
             
@@ -2076,87 +1032,7 @@
             const savedTextSpeed = localStorage.getItem('textDisplaySpeed');
             if (savedTextSpeed) {
                 textDisplaySpeed = parseInt(savedTextSpeed);
-                textSpeedSlider.value = textDisplaySpeed;
-                textSpeedValue.value = textDisplaySpeed;
             }
-            
-            // 保存配置
-            saveConfigButton.addEventListener('click', function() {
-                apiConfig.url = apiUrlInput.value.trim();
-                apiConfig.key = apiKeyInput.value.trim();
-                apiConfig.appId = appIdInput.value.trim();
-                
-                if (apiConfig.url && apiConfig.key && apiConfig.appId) {
-                    localStorage.setItem('apiConfig', JSON.stringify(apiConfig));
-                    localStorage.setItem('textDisplaySpeed', textDisplaySpeed);
-                    status.textContent = '配置已保存';
-                    
-                    // 显示成功消息
-                    addMessage('API配置已保存，现在可以开始对话了。', 'bot');
-                } else {
-                    status.textContent = '请填写所有配置项';
-                }
-            });
-            
-            // 保存跳转配置
-            saveJumpConfigButton.addEventListener('click', function() {
-                modelJumpConfig.clickJumpEnabled = clickJumpEnabledCheckbox.checked;
-                
-                localStorage.setItem('modelJumpConfig', JSON.stringify(modelJumpConfig));
-                status.textContent = '跳转配置已保存';
-                
-                // 显示配置信息
-                const enabledText = modelJumpConfig.clickJumpEnabled ? "启用" : "禁用";
-                addMessage(`点击跳转功能已${enabledText}`, 'bot');
-            });
-            
-            // 保存模型跳转配置
-            saveModelJumpConfigButton.addEventListener('click', saveModelJumpConfig);
-            
-            // 显示模型选择器
-            showModelSelectorButton.addEventListener('click', showModelSelector);
-            
-            // 快速跳转按钮
-            quickJumpButton.addEventListener('click', function() {
-                if (modelJumpConfig.clickJumpEnabled) {
-                    // 执行当前模型的跳转
-                    handleModelClick();
-                } else {
-                    showModelSelector();
-                }
-            });
-            
-            // 恢复默认模型
-            loadDefaultModelButton.addEventListener('click', function() {
-                modelJumpConfig.currentModelIndex = 0;
-                loadModel(DEFAULT_MODEL_URL);
-            });
-            
-            // 加载本地模型
-            loadLocalModelButton.addEventListener('click', function() {
-                modelFileInput.click();
-            });
-            
-            modelFileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    // 检查文件大小
-                    if (file.size > 50 * 1024 * 1024) { // 50MB限制
-                        document.getElementById('status').textContent = '文件过大，请选择小于50MB的文件';
-                        addMessage('文件过大，请选择小于50MB的模型文件。', 'bot');
-                        return;
-                    }
-                    
-                    // 检查文件类型
-                    if (!file.name.toLowerCase().endsWith('.glb') && !file.name.toLowerCase().endsWith('.gltf')) {
-                        document.getElementById('status').textContent = '请选择GLB或GLTF格式的文件';
-                        addMessage('请选择GLB或GLTF格式的模型文件。', 'bot');
-                        return;
-                    }
-                    
-                    loadLocalModel(file);
-                }
-            });
             
             // 禁用输入界面
             function disableInput() {
@@ -2183,7 +1059,7 @@
                 // 检查API配置
                 if (!apiConfig.url || !apiConfig.key || !apiConfig.appId) {
                     status.textContent = '请先配置API信息';
-                    addMessage('请先配置API信息，按Alt+9打开配置面板。', 'bot');
+                    addMessage('请先配置API信息，然后开始对话。', 'bot');
                     return;
                 }
                 
@@ -2317,17 +1193,6 @@
                 if (e.key === 'Enter' && !isWaitingForResponse) {
                     sendMessage();
                 }
-            });
-            
-            // 重置相机按钮
-            resetCameraButton.addEventListener('click', function() {
-                controls.reset();
-            });
-            
-            // 切换动画按钮
-            toggleAnimationButton.addEventListener('click', function() {
-                isAnimating = !isAnimating;
-                this.textContent = isAnimating ? '暂停动画' : '播放动画';
             });
             
             // 初始滚动到底部
