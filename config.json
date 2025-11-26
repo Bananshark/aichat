@@ -102,7 +102,7 @@
   },
   "modelJump": {
     "clickJumpEnabled": true,
-    "currentModelIndex": 1,
+    "currentModelIndex": 0,
     "description": "模型跳转配置"
   },
   "modelLibrary": [
