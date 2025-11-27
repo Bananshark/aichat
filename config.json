@@ -1,52 +1,154 @@
 {
-    "api": {
-      "url": "https://dashscope.aliyuncs.com/api/v1/apps/d93cb258746a4c25a49c6c0a8edb0ead/completion",
-      "key": "sk-3dac8516f796455f8f936e144b8af931",
-      "appId": "d93cb258746a4c25a49c6c0a8edb0ead"
+  "api": {
+    "url": "https://dashscope.aliyuncs.com/api/v1/apps/d93cb258746a4c25a49c6c0a8edb0ead/completion",
+    "key": "sk-3dac8516f796455f8f936e144b8af931",
+    "appId": "d93cb258746a4c25a49c6c0a8edb0ead",
+    "description": "API配置信息，可在界面中配置或在此文件中设置默认值"
+  },
+  "model": {
+    "defaultModelUrl": "model/kid-hello.glb",
+    "defaultPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "description": "模型的初始位置"
     },
-    "model": {
-      "defaultModelUrl": "model/kid-hello.glb",
-      "defaultPosition": { "x": 0, "y": 0, "z": 0 },
-      "defaultRotation": { "x": 0, "y": 0, "z": 0 },
-      "autoScale": true,
-      "scaleMultiplier": 2,
-      "localModelRotationY": -90
+    "defaultRotation": {
+      "x": 0,
+      "y": -90,
+      "z": 0,
+      "description": "模型的初始旋转角度（度）"
     },
-    "camera": {
-      "fov": 75,
-      "near": 0.1,
-      "far": 1000,
-      "position": { "x": 0, "y": 1.5, "z": 5 },
-      "target": { "x": 0, "y": 1, "z": 0 }
+    "autoScale": true,
+    "scaleMultiplier": 2,
+    "localModelRotationY": -90,
+    "description": "模型配置参数"
+  },
+  "camera": {
+    "fov": 75,
+    "near": 0.1,
+    "far": 1000,
+    "position": {
+      "x": 0,
+      "y": 1.5,
+      "z": 5,
+      "description": "相机初始位置"
     },
-    "light": {
-      "ambient": { "color": "#ffffff", "intensity": 0.6 },
-      "directional": {
-        "color": "#ffffff",
-        "intensity": 0.8,
-        "position": { "x": 5, "y": 10, "z": 7 },
-        "castShadow": true,
-        "shadowMapSize": { "width": 2048, "height": 2048 }
-      }
+    "target": {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "description": "相机目标点"
     },
-    "controls": {
-      "enableDamping": true,
-      "dampingFactor": 0.05,
-      "minDistance": 1,
-      "maxDistance": 20,
-      "target": { "x": 0, "y": 1, "z": 0 }
+    "description": "相机配置参数"
+  },
+  "light": {
+    "ambient": {
+      "color": "#ffffff",
+      "intensity": 0.6,
+      "description": "环境光配置"
     },
-    "scene": {
-      "backgroundColor": "#0f172a",
-      "shadowMap": { "enabled": true, "type": "PCFSoftShadowMap" },
-      "renderer": {
-        "antialias": true,
-        "alpha": true,
-        "powerPreference": "high-performance",
-        "pixelRatio": "auto"
-      }
+    "directional": {
+      "color": "#ffffff",
+      "intensity": 0.8,
+      "position": {
+        "x": 5,
+        "y": 10,
+        "z": 7,
+        "description": "定向光位置"
+      },
+      "castShadow": true,
+      "shadowMapSize": {
+        "width": 2048,
+        "height": 2048,
+        "description": "阴影贴图尺寸"
+      },
+      "description": "定向光配置"
     },
-    "textDisplay": { "speed": 50 },
-    "animation": { "defaultEnabled": true },
-    "file": { "maxFileSize": 52428800, "allowedExtensions": [".glb", ".gltf"] }
-  }
+    "description": "灯光配置参数"
+  },
+  "controls": {
+    "enableDamping": true,
+    "dampingFactor": 0.05,
+    "minDistance": 1,
+    "maxDistance": 20,
+    "target": {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "description": "轨道控制器默认聚焦点"
+    },
+    "description": "轨道控制器配置"
+  },
+  "scene": {
+    "backgroundColor": "#0f172a",
+    "shadowMap": {
+      "enabled": true,
+      "type": "PCFSoftShadowMap",
+      "description": "阴影贴图配置"
+    },
+    "renderer": {
+      "antialias": true,
+      "alpha": true,
+      "powerPreference": "high-performance",
+      "pixelRatio": "auto",
+      "description": "渲染器配置，pixelRatio为'auto'时自动计算"
+    },
+    "description": "场景配置参数"
+  },
+  "textDisplay": {
+    "speed": 50,
+    "description": "文字显示速度，单位：毫秒/字"
+  },
+  "modelJump": {
+    "clickJumpEnabled": true,
+    "currentModelIndex": 0,
+    "description": "模型跳转配置"
+  },
+  "modelLibrary": [
+    {
+      "name": "狐狸",
+      "url": "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Fox/glTF-Binary/Fox.glb",
+      "description": "可爱的狐狸角色",
+      "jumpTo": 1
+    },
+    {
+      "name": "小黄鸭",
+      "url": "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF-Binary/Duck.glb",
+      "description": "经典小黄鸭",
+      "jumpTo": 2
+    },
+    {
+      "name": "小孩站立",
+      "url": "model/little_kid _stand.glb",
+      "description": "本地模型 - 小孩站立姿势",
+      "jumpTo": 3
+    },
+    {
+      "name": "小孩生气",
+      "url": "model/little_kid_angre.glb",
+      "description": "本地模型 - 小孩生气表情",
+      "jumpTo": 4
+    }
+  ],
+  "ui": {
+    "title": "3D卡通人智能助手",
+    "subtitle": "与可爱的3D卡通角色进行智能对话",
+    "welcomeMessage": "你好！我是鼎鼎，你的3D卡通助手",
+    "inputPlaceholder": "输入您的问题...",
+    "statusText": "请配置API信息",
+    "description": "UI文本配置"
+  },
+  "animation": {
+    "defaultEnabled": true,
+    "description": "动画默认是否启用"
+  },
+  "file": {
+    "maxFileSize": 52428800,
+    "allowedExtensions": [".glb", ".gltf"],
+    "description": "文件上传限制配置，maxFileSize单位：字节"
+  },
+  "version": "1.0.0",
+  "description": "3D卡通人智能聊天助手配置文件，修改此文件可以更改默认参数。修改后需要刷新页面才能生效。"
+}
+
