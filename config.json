@@ -97,12 +97,12 @@
     "description": "场景配置参数"
   },
   "textDisplay": {
-    "speed": 30,
+    "speed": 50,
     "description": "文字显示速度，单位：毫秒/字"
   },
   "modelJump": {
-    "clickJumpEnabled": false,
-    "currentModelIndex": 1,
+    "clickJumpEnabled": true,
+    "currentModelIndex": 0,
     "description": "模型跳转配置"
   },
   "modelLibrary": [
@@ -113,28 +113,16 @@
       "jumpTo": 1
     },
     {
-      "name": "机器人",
-      "url": "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb",
-      "description": "富有表现力的机器人",
-      "jumpTo": 2
-    },
-    {
-      "name": "太空人",
-      "url": "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Astronaut/glTF-Binary/Astronaut.glb",
-      "description": "太空探索者",
-      "jumpTo": 3
-    },
-    {
       "name": "小黄鸭",
       "url": "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF-Binary/Duck.glb",
       "description": "经典小黄鸭",
-      "jumpTo": 0
+      "jumpTo": 2
     },
     {
       "name": "小孩站立",
       "url": "model/little_kid _stand.glb",
       "description": "本地模型 - 小孩站立姿势",
-      "jumpTo": 5
+      "jumpTo": 3
     },
     {
       "name": "小孩生气",
@@ -146,7 +134,7 @@
   "ui": {
     "title": "3D卡通人智能助手",
     "subtitle": "与可爱的3D卡通角色进行智能对话",
-    "welcomeMessage": "你好！我是你的3D卡通助手，请按Alt+9打开配置面板，配置API信息后开始对话。",
+    "welcomeMessage": "你好！我是鼎鼎，你的3D卡通助手",
     "inputPlaceholder": "输入您的问题...",
     "statusText": "请配置API信息",
     "description": "UI文本配置"

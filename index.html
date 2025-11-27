@@ -228,7 +228,7 @@
             height: 50px;
             border-radius: 50%;
             background: linear-gradient(135deg, #6e8efb, #a777e3);
-            display: flex;
+            display: none; /* 隐藏配置面板按钮 */
             align-items: center;
             justify-content: center;
             cursor: pointer;
@@ -656,52 +656,6 @@
             </div>
         </div>
 
-        <!-- 新增：模型跳转配置 -->
-        <div class="config-section">
-            <h4>模型跳转配置</h4>
-            <div class="config-group">
-                <label for="clickJumpEnabled">启用点击跳转:</label>
-                <input type="checkbox" id="clickJumpEnabled" checked>
-            </div>
-            <div class="config-group">
-                <button id="showModelSelector">显示模型选择器</button>
-            </div>
-            <div class="config-group">
-                <button id="saveJumpConfig">保存跳转配置</button>
-            </div>
-        </div>
-
-        <!-- 新增：快速修改跳转 -->
-        <div class="config-section">
-            <h4>快速修改跳转</h4>
-            <div class="config-group">
-                <label for="jumpSourceSelect">来源模型:</label>
-                <select id="jumpSourceSelect"></select>
-            </div>
-            <div class="config-group">
-                <label for="jumpTargetSelect">跳转目标:</label>
-                <select id="jumpTargetSelect">
-                    <option value="-1">无跳转</option>
-                </select>
-            </div>
-            <div class="config-group">
-                <button id="applyJumpChange">应用跳转设置</button>
-            </div>
-        </div>
-
-        <!-- 新增：模型跳转目标配置 -->
-        <div class="config-section">
-            <h4>模型跳转目标</h4>
-            <div class="config-group">
-                <label>为每个模型设置点击后跳转的目标:</label>
-            </div>
-            <div id="modelJumpConfigs">
-                <!-- 模型跳转配置将通过JavaScript动态生成 -->
-            </div>
-            <div class="config-group">
-                <button id="saveModelJumpConfig">保存跳转目标</button>
-            </div>
-        </div>
 
         <div class="config-section">
             <h4>模型位置</h4>
@@ -805,7 +759,6 @@
     <div class="floating-controls">
         <button id="resetCamera">重置视角</button>
         <button id="toggleAnimation">暂停动画</button>
-        <button id="quickJump">快速跳转</button>
     </div>
 
     <div class="shortcut-hint">按 Alt+9 显示/隐藏配置面板</div>
@@ -911,12 +864,11 @@ npx serve . -p 5500</pre>
                 }
             },
             textDisplay: { speed: 50 },
-            modelJump: { clickJumpEnabled: true, currentModelIndex: 0 },
             modelLibrary: [
-                { name: "狐狸", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Fox/glTF-Binary/Fox.glb", description: "可爱的狐狸角色", jumpTo: 1 },
-                { name: "机器人", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb", description: "富有表现力的机器人", jumpTo: 2 },
-                { name: "太空人", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Astronaut/glTF-Binary/Astronaut.glb", description: "太空探索者", jumpTo: 3 },
-                { name: "小黄鸭", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF-Binary/Duck.glb", description: "经典小黄鸭", jumpTo: 0 }
+                { name: "狐狸", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Fox/glTF-Binary/Fox.glb", description: "可爱的狐狸角色" },
+                { name: "机器人", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb", description: "富有表现力的机器人" },
+                { name: "太空人", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Astronaut/glTF-Binary/Astronaut.glb", description: "太空探索者" },
+                { name: "小黄鸭", url: "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF-Binary/Duck.glb", description: "经典小黄鸭" }
             ],
             ui: {
                 title: "3D卡通人智能助手",
@@ -983,11 +935,11 @@ npx serve . -p 5500</pre>
         // 控制输入状态
         let isWaitingForResponse = false;
         
-        // 模型跳转配置（将从配置文件加载）
-        let modelJumpConfig = {
-            clickJumpEnabled: true,
-            currentModelIndex: 0
-        };
+        // 模型加载状态标志，防止重复加载
+        let isModelLoading = false;
+        
+        // 当前模型索引（用于跟踪当前加载的模型）
+        let currentModelIndex = 0;
         
         // 预设模型库（将从配置文件加载）
         let MODEL_LIBRARY = [];
@@ -1070,445 +1022,17 @@ npx serve . -p 5500</pre>
             // 窗口大小调整
             window.addEventListener('resize', onWindowResize);
             
-            // 添加点击事件监听
-            setupModelClick();
-            
             // 动画循环
             animate();
         }
         
-        // 设置模型点击事件
-        function setupModelClick() {
-            const canvas = document.getElementById('characterCanvas');
-            const raycaster = new THREE.Raycaster();
-            const mouse = new THREE.Vector2();
-            
-            canvas.addEventListener('click', (event) => {
-                // 如果配置面板打开，不处理点击
-                if (document.getElementById('configPanel').style.display === 'block') {
-                    return;
-                }
-                
-                // 计算鼠标在归一化设备坐标中的位置
-                const rect = canvas.getBoundingClientRect();
-                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-                
-                // 更新射线
-                raycaster.setFromCamera(mouse, camera);
-                
-                // 检查与模型的交点
-                if (currentModel) {
-                    const intersects = raycaster.intersectObject(currentModel, true);
-                    
-                    if (intersects.length > 0) {
-                        // 点击到了模型
-                        handleModelClick();
-                    }
-                }
-            });
-        }
-        
-        // 处理模型点击
-        function handleModelClick() {
-            if (modelJumpConfig.clickJumpEnabled) {
-                // 点击跳转模式：跳转到当前模型配置的跳转目标
-                const currentModelData = getCurrentModelData();
-                if (currentModelData && currentModelData.jumpTo !== undefined && currentModelData.jumpTo !== -1) {
-                    jumpToModel(currentModelData.jumpTo);
-                } else {
-                    // 如果没有配置跳转目标，显示选择器
-                    showModelSelector();
-                }
-            } else {
-                // 点击跳转被禁用，显示选择器
-                showModelSelector();
-            }
-        }
-        
-        // 根据全局索引获取模型
-        function getModelDataByIndex(index) {
-            if (typeof index !== 'number' || isNaN(index)) return null;
-            if (index < 0) return null;
-            
-            if (index < MODEL_LIBRARY.length) {
-                return { model: MODEL_LIBRARY[index], isLocal: false };
-            }
-            
-            const localIndex = index - MODEL_LIBRARY.length;
-            if (localIndex >= 0 && localIndex < LOCAL_MODELS.length) {
-                return { model: LOCAL_MODELS[localIndex], isLocal: true };
-            }
-            
-            return null;
-        }
-        
-        // 获取当前模型数据
-        function getCurrentModelData() {
-            const current = getModelDataByIndex(modelJumpConfig.currentModelIndex);
-            return current ? current.model : null;
-        }
-        
-        function getAllModelOptions() {
-            const options = [];
-            MODEL_LIBRARY.forEach((model, index) => {
-                options.push({ index, label: model.name, isLocal: false });
-            });
-            LOCAL_MODELS.forEach((model, localIdx) => {
-                const globalIndex = MODEL_LIBRARY.length + localIdx;
-                options.push({ index: globalIndex, label: `${model.name}（本地）`, isLocal: true });
-            });
-            return options;
-        }
-        
-        function refreshJumpEditorOptions(selectedSourceIndex) {
-            const sourceSelect = document.getElementById('jumpSourceSelect');
-            const targetSelect = document.getElementById('jumpTargetSelect');
-            if (!sourceSelect || !targetSelect) return;
-            
-            const modelOptions = getAllModelOptions();
-            if (modelOptions.length === 0) {
-                sourceSelect.innerHTML = '<option value="-1">暂无模型</option>';
-                targetSelect.innerHTML = '<option value="-1">无可用模型</option>';
-                return;
-            }
-            
-            sourceSelect.innerHTML = modelOptions
-                .map(option => `<option value="${option.index}">${option.label}</option>`)
-                .join('');
-            
-            if (selectedSourceIndex === undefined || selectedSourceIndex === null) {
-                selectedSourceIndex = modelJumpConfig.currentModelIndex || 0;
-                if (selectedSourceIndex >= modelOptions.length) {
-                    selectedSourceIndex = 0;
-                }
-            }
-            sourceSelect.value = selectedSourceIndex;
-            
-            targetSelect.innerHTML = [
-                '<option value="-1">无跳转</option>',
-                ...modelOptions.map(option => `<option value="${option.index}">${option.label}</option>`)
-            ].join('');
-            
-            updateJumpEditorTargetValue();
-        }
-        
-        function updateJumpEditorTargetValue() {
-            const sourceSelect = document.getElementById('jumpSourceSelect');
-            const targetSelect = document.getElementById('jumpTargetSelect');
-            if (!sourceSelect || !targetSelect || sourceSelect.value === '') return;
-            
-            const sourceIndex = parseInt(sourceSelect.value);
-            const modelData = getModelDataByIndex(sourceIndex);
-            if (modelData && modelData.model) {
-                const jumpValue = modelData.model.jumpTo !== undefined ? modelData.model.jumpTo : -1;
-                targetSelect.value = jumpValue;
-            } else {
-                targetSelect.value = -1;
-            }
-        }
-        
-        function applyJumpEditorChange() {
-            const sourceSelect = document.getElementById('jumpSourceSelect');
-            const targetSelect = document.getElementById('jumpTargetSelect');
-            if (!sourceSelect || !targetSelect) return;
-            
-            const sourceIndex = parseInt(sourceSelect.value);
-            const targetIndex = parseInt(targetSelect.value);
-            if (isNaN(sourceIndex)) {
-                console.warn('请选择需要修改的来源模型');
-                return;
-            }
-            updateModelJumpMapping(sourceIndex, isNaN(targetIndex) ? -1 : targetIndex);
-        }
-        
-        function updateModelJumpMapping(sourceIndex, targetIndex) {
-            const sourceData = getModelDataByIndex(sourceIndex);
-            if (!sourceData) {
-                console.warn('未找到模型索引:', sourceIndex);
-                return;
-            }
-            
-            sourceData.model.jumpTo = targetIndex;
-            
-            localStorage.setItem('modelLibraryConfig', JSON.stringify(MODEL_LIBRARY));
-            localStorage.setItem('localModelsConfig', JSON.stringify(LOCAL_MODELS));
-            
-            const sourceName = sourceData.model.name + (sourceData.isLocal ? '（本地）' : '');
-            let targetName = '无跳转';
-            if (targetIndex >= 0) {
-                const targetData = getModelDataByIndex(targetIndex);
-                if (targetData) {
-                    targetName = targetData.model.name + (targetData.isLocal ? '（本地）' : '');
-                } else {
-                    targetName = '无效目标';
-                }
-            }
-            
-            const statusEl = document.getElementById('status');
-            if (statusEl) {
-                statusEl.textContent = `已设置 ${sourceName} -> ${targetName}`;
-            }
-            
-            addMessage(`模型“${sourceName}”的跳转目标已更新为“${targetName}”。`, 'bot');
-            initModelJumpConfigs();
-            refreshJumpEditorOptions(sourceIndex);
-            updateCurrentModelInfo();
-        }
-        
-        // 显示模型选择器
-        function showModelSelector() {
-            const transitionOverlay = document.getElementById('transitionOverlay');
-            const transitionText = document.getElementById('transitionText');
-            const modelGrid = document.getElementById('modelGrid');
-            
-            transitionText.textContent = "请选择模型";
-            transitionOverlay.style.display = 'flex';
-            modelGrid.style.display = 'grid';
-            
-            // 生成模型选项
-            modelGrid.innerHTML = '';
-            
-            // 添加预设模型
-            MODEL_LIBRARY.forEach((model, index) => {
-                createModelOption(model, index, false);
-            });
-            
-            // 添加本地模型
-            LOCAL_MODELS.forEach((model, index) => {
-                const globalIndex = MODEL_LIBRARY.length + index;
-                createModelOption(model, globalIndex, true);
-            });
-            
-            function createModelOption(model, index, isLocal) {
-                const modelOption = document.createElement('div');
-                modelOption.className = 'model-option';
-                if (index === modelJumpConfig.currentModelIndex) {
-                    modelOption.classList.add('active');
-                }
-                
-                let jumpTargetName = '无';
-                if (model.jumpTo >= 0) {
-                    if (model.jumpTo < MODEL_LIBRARY.length) {
-                        jumpTargetName = MODEL_LIBRARY[model.jumpTo].name;
-                    } else {
-                        const localJumpIndex = model.jumpTo - MODEL_LIBRARY.length;
-                        if (localJumpIndex >= 0 && localJumpIndex < LOCAL_MODELS.length) {
-                            jumpTargetName = LOCAL_MODELS[localJumpIndex].name + '（本地）';
-                        }
-                    }
-                }
-                
-                const modelType = isLocal ? '（本地）' : '';
-                
-                modelOption.innerHTML = `
-                    <strong>${model.name}${modelType}</strong>
-                    <div style="font-size: 12px; margin-top: 5px;">${model.description}</div>
-                    <div style="font-size: 10px; color: #aaa; margin-top: 3px;">点击后跳转: ${jumpTargetName}</div>
-                `;
-                modelOption.addEventListener('click', () => {
-                    jumpToModel(index);
-                });
-                modelGrid.appendChild(modelOption);
-            }
-        }
-        
-        // 跳转到指定模型
-        function jumpToModel(index) {
-            // 检查索引是否有效
-            const totalModels = MODEL_LIBRARY.length + LOCAL_MODELS.length;
-            if (index < 0 || index >= totalModels) {
-                console.error('无效的模型索引:', index);
-                return;
-            }
-            
-            const transitionOverlay = document.getElementById('transitionOverlay');
-            const transitionText = document.getElementById('transitionText');
-            const modelGrid = document.getElementById('modelGrid');
-            
-            // 隐藏模型选择器，显示加载状态
-            modelGrid.style.display = 'none';
-            
-            let modelName;
-            if (index < MODEL_LIBRARY.length) {
-                modelName = MODEL_LIBRARY[index].name;
-            } else {
-                const localIndex = index - MODEL_LIBRARY.length;
-                modelName = LOCAL_MODELS[localIndex].name + '（本地）';
-            }
-            
-            transitionText.textContent = `正在切换到 ${modelName}...`;
-            transitionOverlay.style.display = 'flex';
-            
-            // 保存当前模型索引
-            modelJumpConfig.currentModelIndex = index;
-            
-            // 开始过渡动画
-            startTransitionAnimation(() => {
-                // 加载新模型
-                if (index < MODEL_LIBRARY.length) {
-                    loadModel(MODEL_LIBRARY[index].url);
-                } else {
-                    const localIndex = index - MODEL_LIBRARY.length;
-                    loadModel(LOCAL_MODELS[localIndex].url);
-                }
-                
-                // 隐藏过渡界面
-                setTimeout(() => {
-                    transitionOverlay.style.display = 'none';
-                }, 1000);
-            });
-        }
-        
-        // 开始过渡动画
-        function startTransitionAnimation(callback) {
-            if (!currentModel) {
-                callback();
-                return;
-            }
-            
-            const startTime = Date.now();
-            const duration = 1000; // 1秒过渡
-            
-            function animateTransition() {
-                const currentTime = Date.now();
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                // 使用缓动函数
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                
-                // 缩放和旋转动画
-                if (currentModel) {
-                    // 缩小并旋转
-                    const scale = 1 - easeOut * 0.5;
-                    currentModel.scale.setScalar(scale);
-                    currentModel.rotation.y += 0.05;
-                    
-                    // 淡出效果
-                    currentModel.traverse((child) => {
-                        if (child.isMesh && child.material) {
-                            child.material.transparent = true;
-                            child.material.opacity = 1 - easeOut;
-                        }
-                    });
-                }
-                
-                if (progress < 1) {
-                    requestAnimationFrame(animateTransition);
-                } else {
-                    // 动画完成，执行回调
-                    callback();
-                }
-            }
-            
-            animateTransition();
-        }
-        
-        // 初始化模型跳转配置界面
-        function initModelJumpConfigs() {
-            const modelJumpConfigs = document.getElementById('modelJumpConfigs');
-            modelJumpConfigs.innerHTML = '';
-            
-            // 添加预设模型的配置
-            MODEL_LIBRARY.forEach((model, index) => {
-                const configItem = createModelConfigItem(model, index, false);
-                modelJumpConfigs.appendChild(configItem);
-            });
-            
-            // 添加本地模型的配置
-            LOCAL_MODELS.forEach((model, index) => {
-                const globalIndex = MODEL_LIBRARY.length + index;
-                const configItem = createModelConfigItem(model, globalIndex, true);
-                modelJumpConfigs.appendChild(configItem);
-            });
-            
-            refreshJumpEditorOptions();
-        }
-
-        // 创建模型配置项的函数
-        function createModelConfigItem(model, index, isLocal) {
-            const configItem = document.createElement('div');
-            configItem.className = 'model-config-item';
-            
-            const modelType = isLocal ? '（本地）' : '';
-            
-            configItem.innerHTML = `
-                <div class="model-config-name">${model.name}${modelType}</div>
-                <select class="model-config-select" data-model-index="${index}" data-is-local="${isLocal}">
-                    ${MODEL_LIBRARY.map((targetModel, targetIndex) => `
-                        <option value="${targetIndex}" ${model.jumpTo === targetIndex ? 'selected' : ''}>
-                            ${targetModel.name}
-                        </option>
-                    `).join('')}
-                    ${LOCAL_MODELS.map((targetModel, targetIndex) => `
-                        <option value="${MODEL_LIBRARY.length + targetIndex}" ${model.jumpTo === MODEL_LIBRARY.length + targetIndex ? 'selected' : ''}>
-                            ${targetModel.name}（本地）
-                        </option>
-                    `).join('')}
-                    <option value="-1" ${model.jumpTo === -1 ? 'selected' : ''}>无跳转</option>
-                </select>
-            `;
-            
-            return configItem;
-        }
-        
-        // 保存模型跳转配置
-        function saveModelJumpConfig() {
-            const selectElements = document.querySelectorAll('.model-config-select');
-            
-            selectElements.forEach(select => {
-                const modelIndex = parseInt(select.getAttribute('data-model-index'));
-                const isLocal = select.getAttribute('data-is-local') === 'true';
-                const jumpToIndex = parseInt(select.value);
-                
-                if (isLocal) {
-                    // 本地模型
-                    const localIndex = modelIndex - MODEL_LIBRARY.length;
-                    if (localIndex >= 0 && localIndex < LOCAL_MODELS.length) {
-                        LOCAL_MODELS[localIndex].jumpTo = jumpToIndex;
-                    }
-                } else {
-                    // 预设模型
-                    if (modelIndex >= 0 && modelIndex < MODEL_LIBRARY.length) {
-                        MODEL_LIBRARY[modelIndex].jumpTo = jumpToIndex;
-                    }
-                }
-            });
-            
-            // 保存到本地存储
-            localStorage.setItem('modelLibraryConfig', JSON.stringify(MODEL_LIBRARY));
-            localStorage.setItem('localModelsConfig', JSON.stringify(LOCAL_MODELS));
-            
-            // 显示成功消息
-            addMessage('模型跳转配置已保存！', 'bot');
-            document.getElementById('status').textContent = '跳转配置已保存';
-            
-            // 更新当前模型的跳转信息显示
-            updateCurrentModelInfo();
-            refreshJumpEditorOptions();
-        }
-        
         // 更新当前模型信息显示
         function updateCurrentModelInfo() {
-            const currentModelData = getCurrentModelData();
-            if (currentModelData) {
-                let jumpTargetName = '无';
-                if (currentModelData.jumpTo >= 0) {
-                    if (currentModelData.jumpTo < MODEL_LIBRARY.length) {
-                        jumpTargetName = MODEL_LIBRARY[currentModelData.jumpTo].name;
-                    } else {
-                        const localJumpIndex = currentModelData.jumpTo - MODEL_LIBRARY.length;
-                        if (localJumpIndex >= 0 && localJumpIndex < LOCAL_MODELS.length) {
-                            jumpTargetName = LOCAL_MODELS[localJumpIndex].name + '（本地）';
-                        }
-                    }
-                }
-                
-                // 在状态栏显示跳转信息
-                const modelType = modelJumpConfig.currentModelIndex >= MODEL_LIBRARY.length ? '（本地）' : '';
-                document.getElementById('status').textContent = 
-                    `当前: ${currentModelData.name}${modelType} | 点击跳转: ${jumpTargetName}`;
+            // 简化版本，只显示当前模型名称
+            if (currentModel) {
+                // 尝试从模型库中找到当前模型
+                const modelName = MODEL_LIBRARY.find(m => m.url === DEFAULT_MODEL_URL)?.name || "当前模型";
+                document.getElementById('status').textContent = `当前: ${modelName}`;
             }
         }
         
@@ -1537,6 +1061,12 @@ npx serve . -p 5500</pre>
         }
         
         function loadModel(url) {
+            // 如果正在加载，忽略请求
+            if (isModelLoading && currentModel) {
+                return;
+            }
+            
+            isModelLoading = true;
             showLoadingOverlay();
             
             const loader = new THREE.GLTFLoader();
@@ -1555,10 +1085,12 @@ npx serve . -p 5500</pre>
                 
                 loader.parse(localModel.fileData, '', function(gltf) {
                     setupModelAfterLoad(gltf, localModel.name, true);
+                    isModelLoading = false;
                 }, function(error) {
                     console.error('本地模型加载错误:', error);
                     document.getElementById('status').textContent = '本地模型加载失败: ' + error.message;
                     hideLoadingOverlay();
+                    isModelLoading = false;
                     addMessage('本地模型加载失败，请重新加载文件。', 'bot');
                 });
             } else {
@@ -1570,6 +1102,7 @@ npx serve . -p 5500</pre>
                     function(gltf) {
                         const modelName = MODEL_LIBRARY.find(m => m.url === url)?.name || "自定义模型";
                         setupModelAfterLoad(gltf, modelName, false);
+                        isModelLoading = false;
                     },
                     function(progress) {
                         // 加载进度
@@ -1580,6 +1113,7 @@ npx serve . -p 5500</pre>
                         console.error('模型加载错误:', error);
                         document.getElementById('status').textContent = '模型加载失败: ' + error.message;
                         hideLoadingOverlay();
+                        isModelLoading = false;
                         addMessage('模型加载失败，请检查模型文件或尝试其他模型。', 'bot');
                     }
                 );
@@ -1665,6 +1199,12 @@ npx serve . -p 5500</pre>
         }
         
         function loadLocalModel(file) {
+            // 如果正在加载，忽略请求
+            if (isModelLoading) {
+                return;
+            }
+            
+            isModelLoading = true;
             showLoadingOverlay();
             
             const reader = new FileReader();
@@ -1730,7 +1270,6 @@ npx serve . -p 5500</pre>
                         name: file.name.replace(/\.[^/.]+$/, ""), // 移除文件扩展名
                         url: `local://${file.name}`,
                         description: `本地模型: ${file.name}`,
-                        jumpTo: 0, // 默认跳转到第一个模型
                         isLocal: true,
                         fileData: arrayBuffer // 保存文件数据以便重新加载
                     };
@@ -1744,11 +1283,7 @@ npx serve . -p 5500</pre>
                     }
                     
                     // 更新当前模型索引为本地模型
-                    modelJumpConfig.currentModelIndex = MODEL_LIBRARY.length + LOCAL_MODELS.length - 1;
-                    
-                    // 更新模型跳转配置界面
-                    initModelJumpConfigs();
-                    refreshJumpEditorOptions();
+                    currentModelIndex = MODEL_LIBRARY.length + LOCAL_MODELS.length - 1;
                     
                     // 更新状态
                     document.getElementById('status').textContent = '本地模型加载成功！';
@@ -1763,10 +1298,12 @@ npx serve . -p 5500</pre>
                     
                     // 显示成功消息
                     addMessage(`本地模型 "${localModelInfo.name}" 加载成功！已设置为Y轴旋转-90度。`, 'bot');
+                    isModelLoading = false;
                 }, function(error) {
                     console.error('模型解析错误:', error);
                     document.getElementById('status').textContent = '模型解析失败: ' + error.message;
                     hideLoadingOverlay();
+                    isModelLoading = false;
                     
                     // 显示错误消息
                     addMessage('模型解析失败，请检查文件格式是否正确。', 'bot');
@@ -1777,6 +1314,7 @@ npx serve . -p 5500</pre>
                 console.error('文件读取错误:', error);
                 document.getElementById('status').textContent = '文件读取失败';
                 hideLoadingOverlay();
+                isModelLoading = false;
                 
                 // 显示错误消息
                 addMessage('文件读取失败，请重试或选择其他文件。', 'bot');
@@ -1910,9 +1448,10 @@ npx serve . -p 5500</pre>
             // 应用默认模型URL
             DEFAULT_MODEL_URL = cfg.model.defaultModelUrl || DEFAULT_MODEL_URL;
             
-            // 应用模型跳转配置
-            modelJumpConfig.clickJumpEnabled = cfg.modelJump.clickJumpEnabled !== undefined ? cfg.modelJump.clickJumpEnabled : true;
-            modelJumpConfig.currentModelIndex = cfg.modelJump.currentModelIndex !== undefined ? cfg.modelJump.currentModelIndex : 0;
+            // 应用当前模型索引（如果配置文件中存在）
+            if (cfg.modelJump && cfg.modelJump.currentModelIndex !== undefined) {
+                currentModelIndex = cfg.modelJump.currentModelIndex;
+            }
             
             // 应用模型库（如果配置文件中存在）
             if (cfg.modelLibrary && cfg.modelLibrary.length > 0) {
@@ -1979,11 +1518,6 @@ npx serve . -p 5500</pre>
                 document.getElementById('textSpeed').value = cfg.textDisplay.speed;
                 document.getElementById('textSpeedValue').value = cfg.textDisplay.speed;
             }
-            
-            // 更新跳转配置复选框
-            if (cfg.modelJump) {
-                document.getElementById('clickJumpEnabled').checked = cfg.modelJump.clickJumpEnabled;
-            }
         }
         
         // 聊天功能
@@ -2000,14 +1534,10 @@ npx serve . -p 5500</pre>
             // 应用配置到UI元素
             applyConfigToUI();
             
-            // 初始化模型跳转配置界面
-            initModelJumpConfigs();
-            
             // 加载保存的模型配置（localStorage优先级高于配置文件）
             const savedModelConfig = localStorage.getItem('modelLibraryConfig');
             if (savedModelConfig) {
                 MODEL_LIBRARY = JSON.parse(savedModelConfig);
-                initModelJumpConfigs();
             }
             
             // 加载保存的本地模型配置
@@ -2020,19 +1550,10 @@ npx serve . -p 5500</pre>
                     LOCAL_MODELS.forEach(model => {
                         model.fileData = null; // 清除文件数据，需要重新上传
                     });
-                    initModelJumpConfigs();
                 } catch (e) {
                     console.error('解析本地模型配置失败:', e);
                     LOCAL_MODELS = [];
                 }
-            }
-            
-            // 加载保存的跳转配置（localStorage优先级高于配置文件）
-            const savedJumpConfig = localStorage.getItem('modelJumpConfig');
-            if (savedJumpConfig) {
-                const savedConfig = JSON.parse(savedJumpConfig);
-                modelJumpConfig.clickJumpEnabled = savedConfig.clickJumpEnabled !== undefined ? savedConfig.clickJumpEnabled : modelJumpConfig.clickJumpEnabled;
-                document.getElementById('clickJumpEnabled').checked = modelJumpConfig.clickJumpEnabled;
             }
             
             const userInput = document.getElementById('userInput');
@@ -2052,15 +1573,6 @@ npx serve . -p 5500</pre>
             const configPanel = document.getElementById('configPanel');
             const configButton = document.getElementById('configButton');
             
-            // 模型跳转配置元素
-            const clickJumpEnabledCheckbox = document.getElementById('clickJumpEnabled');
-            const showModelSelectorButton = document.getElementById('showModelSelector');
-            const saveJumpConfigButton = document.getElementById('saveJumpConfig');
-            const saveModelJumpConfigButton = document.getElementById('saveModelJumpConfig');
-            const quickJumpButton = document.getElementById('quickJump');
-            const jumpSourceSelect = document.getElementById('jumpSourceSelect');
-            const jumpTargetSelect = document.getElementById('jumpTargetSelect');
-            const applyJumpChangeButton = document.getElementById('applyJumpChange');
             
             // 模型位置控制元素
             const modelXSlider = document.getElementById('modelX');
@@ -2208,47 +1720,9 @@ npx serve . -p 5500</pre>
                 }
             });
             
-            // 保存跳转配置
-            saveJumpConfigButton.addEventListener('click', function() {
-                modelJumpConfig.clickJumpEnabled = clickJumpEnabledCheckbox.checked;
-                
-                localStorage.setItem('modelJumpConfig', JSON.stringify(modelJumpConfig));
-                status.textContent = '跳转配置已保存';
-                
-                // 显示配置信息
-                const enabledText = modelJumpConfig.clickJumpEnabled ? "启用" : "禁用";
-                addMessage(`点击跳转功能已${enabledText}`, 'bot');
-            });
-            
-            // 保存模型跳转配置
-            saveModelJumpConfigButton.addEventListener('click', saveModelJumpConfig);
-            
-            // 显示模型选择器
-            showModelSelectorButton.addEventListener('click', showModelSelector);
-            
-            // 快速跳转按钮
-            quickJumpButton.addEventListener('click', function() {
-                if (modelJumpConfig.clickJumpEnabled) {
-                    // 执行当前模型的跳转
-                    handleModelClick();
-                } else {
-                    showModelSelector();
-                }
-            });
-            
-            if (jumpSourceSelect) {
-                jumpSourceSelect.addEventListener('change', updateJumpEditorTargetValue);
-            }
-            
-            if (applyJumpChangeButton) {
-                applyJumpChangeButton.addEventListener('click', function() {
-                    applyJumpEditorChange();
-                });
-            }
-            
             // 恢复默认模型
             loadDefaultModelButton.addEventListener('click', function() {
-                modelJumpConfig.currentModelIndex = 0;
+                currentModelIndex = 0;
                 loadModel(DEFAULT_MODEL_URL);
             });
             
@@ -2296,7 +1770,7 @@ npx serve . -p 5500</pre>
             }
             
             // 发送消息函数
-            function sendMessage() {
+            async function sendMessage() {
                 const message = userInput.value.trim();
                 if (!message) return;
                 
@@ -2319,8 +1793,8 @@ npx serve . -p 5500</pre>
                 status.textContent = '正在与AI助手通信...';
                 scrollToBottom();
                 
-                // 调用API
-                callAPI(message);
+                // 调用API（异步调用）
+                await callAPI(message);
             }
             
             // 调用API
