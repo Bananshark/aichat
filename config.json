@@ -6,7 +6,7 @@
     "description": "API配置信息，可在界面中配置或在此文件中设置默认值"
   },
   "model": {
-    "defaultModelUrl": "model/kid-hello.glb",
+    "defaultModelUrl": "model/123.glb",
     "defaultPosition": {
       "x": 0,
       "y": 0,
