@@ -134,7 +134,7 @@
   "ui": {
     "title": "3D卡通人智能助手",
     "subtitle": "与可爱的3D卡通角色进行智能对话",
-    "welcomeMessage": "你好！我是鼎鼎，你的3D卡通助手",
+    "welcomeMessage": "你好！我是阿篆，你的3D卡通助手",
     "inputPlaceholder": "输入您的问题...",
     "statusText": "请配置API信息",
     "description": "UI文本配置"
